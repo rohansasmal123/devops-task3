@@ -1,0 +1,10 @@
+kind: PersistentVolumeClaim 
+metadata: 
+    name: my-claim 
+spec: 
+    resources: 
+        requests: 
+            storage: 15Gi 
+        accessModes: 
+            - ReadWriteOnce 
+        storageCtassName: standard 

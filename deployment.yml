@@ -1,0 +1,55 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+    name: php 
+    labels: 
+        app: php-apache 
+spec: 
+    replicas: 3
+    selector: 
+        matchLabels: 
+            app: apache 
+    template: 
+        metadata: 
+            labels: 
+                app: apache 
+        spec: 
+            containers: 
+            - name: php-apache 
+              image: php:rc-apache 
+              volumeMounts: 
+              - mountPath: /var/www/html 
+                name: test-volume 
+              ports: 
+              - containerPort: 80 
+            volumes: 
+            - name: test-volume 
+              persistentVolumeClaim: 
+            containers: 
+            - name: php-apache 
+              image: php:rc-apache 
+              volumeMounts: 
+              - mountPath: /var/www/html 
+                name: test-volume  
+              ports: 
+              - containerPort: 80 
+            volumes: 
+            - name: test-volume 
+              persistentVolumeClaim: 
+                  claimName: my-claim 
+
+--- 
+apiVersion: vl 
+kind: Service 
+metadata: 
+    name: apache 
+    labels: 
+        app: apache 
+spec: 
+    ports: 
+        - port: 80 
+          nodePort: 32000 
+    selector: 
+        app: apache 
+    type: NodePort 
+
